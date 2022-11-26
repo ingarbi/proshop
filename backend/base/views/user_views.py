@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 
 
-
 from ..serializers import UserSerializer, UserSerializerWithToken
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -14,11 +13,10 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import status
 
 
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
-        
+
         serializer = UserSerializerWithToken(self.user).data
 
         for k, v in serializer.items():
@@ -29,6 +27,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
 @api_view(['POST'])
 def registerUser(request):
@@ -53,8 +52,27 @@ def registerUser(request):
 @permission_classes([IsAdminUser])
 def getUserProfile(request):
     user = request.user
-    
+
     serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUserProfile(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+
+    data = request.data
+
+    user.first_name = data['name']
+    user.username = data['email']
+    user.email = data['email']
+
+    if data['password'] != '':
+        user.password = make_password(data['password'])
+    user.save()
+
     return Response(serializer.data)
 
 
