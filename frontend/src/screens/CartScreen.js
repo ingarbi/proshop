@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { Link, useParams, useSearchParams, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useParams,
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -13,11 +18,12 @@ import {
 import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 
-function CartScreen(props) {
+function CartScreen() {
   const { id } = useParams();
   const productId = id;
   const history = useNavigate();
   const [searchParams] = useSearchParams();
+  
   const qty = searchParams.get("qty") ? Number(searchParams.get("qty")) : 1;
 
   const dispatch = useDispatch();
@@ -31,12 +37,13 @@ function CartScreen(props) {
   }, [dispatch, productId, qty]);
 
   const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
-    history('/login?redirect=shipping')
-  }
+    history("/login?redirect=shipping");
+  };
+
 
   return (
     <Row>
@@ -44,7 +51,7 @@ function CartScreen(props) {
         <h1>Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message variant="info">
-            Your cart is empty <Link to="/">Go back</Link>
+            Your cart is empty <Link to="/">Go Back</Link>
           </Message>
         ) : (
           <ListGroup variant="flush">
@@ -61,7 +68,7 @@ function CartScreen(props) {
                   <Col md={2}>${item.price}</Col>
 
                   <Col md={3}>
-                    <Form.Select
+                    <Form.Control
                       as="select"
                       value={item.qty}
                       onChange={(e) =>
@@ -75,8 +82,9 @@ function CartScreen(props) {
                           {x + 1}
                         </option>
                       ))}
-                    </Form.Select>
+                    </Form.Control>
                   </Col>
+
                   <Col md={1}>
                     <Button
                       type="button"
@@ -92,6 +100,7 @@ function CartScreen(props) {
           </ListGroup>
         )}
       </Col>
+
       <Col md={4}>
         <Card>
           <ListGroup variant="flush">
@@ -100,15 +109,23 @@ function CartScreen(props) {
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
+              $
+              {cartItems
+                .reduce((acc, item) => acc + item.qty * item.price, 0)
+                .toFixed(2)}
             </ListGroup.Item>
           </ListGroup>
-                        <ListGroup.Item>
-                          <Button type="button" className="btn-block col-12" disabled={cartItems.length === 0} onClick={checkoutHandler}>
-                          PROCEED TO CHECKOUT
-                          </Button>
-                        </ListGroup.Item>
 
+          <ListGroup.Item>
+            <Button
+              type="button"
+              className="btn-block"
+              disabled={cartItems.length === 0}
+              onClick={checkoutHandler}
+            >
+              Proceed To Checkout
+            </Button>
+          </ListGroup.Item>
         </Card>
       </Col>
     </Row>

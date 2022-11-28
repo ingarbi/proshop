@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
+import { listMyOrders } from "../actions/orderActions";
 
 function ProfileScreen() {
   const [name, setName] = useState("");
@@ -27,12 +29,16 @@ function ProfileScreen() {
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
 
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
+
   useEffect(() => {
     if (!userInfo) {
       history("/login");
     } else if (!user || !user.name || success) {
       dispatch({ type: USER_UPDATE_PROFILE_RESET });
       dispatch(getUserDetails("profile"));
+      dispatch(listMyOrders())
     } else {
       setName(user.name);
       setEmail(user.email);
@@ -112,7 +118,7 @@ function ProfileScreen() {
         </Form>
       </Col>
 
-      {/* <Col md={9}>
+      <Col md={9}>
                 <h2>My Orders</h2>
                 {loadingOrders ? (
                     <Loader />
@@ -150,7 +156,7 @@ function ProfileScreen() {
                                 </tbody>
                             </Table>
                         )}
-            </Col> */}
+            </Col>
     </Row>
   );
 }
