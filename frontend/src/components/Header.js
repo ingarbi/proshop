@@ -1,74 +1,76 @@
-import React from "react";
+import React from 'react'
+import { LinkContainer } from "react-router-bootstrap"
+import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap"
+import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import { logout } from "../actions/userActions";
+import { logout } from '../actions/userActions';
+import SearchBox from './SearchBox';
 
-function Header() {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+const Header = () => {
 
   const dispatch = useDispatch();
 
+  const { userInfo } = useSelector(state => state.userLogin);
+
   const logoutHandler = () => {
     dispatch(logout());
-  };
+  }
+
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar bg="primary" variant='dark' expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>ProShop</Navbar.Brand>
+            <Navbar.Brand>PROSHOP</Navbar.Brand>
           </LinkContainer>
-
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
+            <SearchBox />
+            <Nav className="ms-auto">
               <LinkContainer to="/cart">
                 <Nav.Link>
-                  <i className="fas fa-shopping-cart"></i>Cart
+                  <i className='fas fa-shopping-cart'></i> Cart
                 </Nav.Link>
               </LinkContainer>
+              {
+                userInfo ? (
+                  <NavDropdown title={userInfo.name} id="username">
 
-              {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item><i className='fas fa-user'></i> Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}><i className='fas fa-power-off'></i> Logout</NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <LinkContainer to="/login">
+                    <Nav.Link>
+                      <i className='fas fa-user'></i> Sign In
+                    </Nav.Link>
                   </LinkContainer>
-
-                  <NavDropdown.Item onClick={logoutHandler}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              ) : (
-                <LinkContainer to="/login">
-                  <Nav.Link>
-                    <i className="fas fa-user"></i>Login
-                  </Nav.Link>
-                </LinkContainer>
-              )}
-
-              {userInfo && userInfo.isAdmin && (
-                <NavDropdown title="Admin" id="adminmenu">
-                  <LinkContainer to="/admin/userlist">
-                    <NavDropdown.Item>Users</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <LinkContainer to="/admin/productlist">
-                    <NavDropdown.Item>Products</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <LinkContainer to="/admin/orderlist">
-                    <NavDropdown.Item>Orders</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
-              )}
+                )
+              }
+              {
+                userInfo && userInfo.isAdmin && (
+                  <NavDropdown title='Admin' id="adminmenu">
+                    <LinkContainer to="/admin/userlist">
+                      <NavDropdown.Item><i className='fas fa-users'></i> Users</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/productlist">
+                      <NavDropdown.Item><i className='fas fa-bag-shopping'></i> Products</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orderlist">
+                      <NavDropdown.Item><i className='fas fa-basket-shopping'></i> Orders</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                )
+              }
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <Outlet />
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

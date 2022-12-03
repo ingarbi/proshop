@@ -1,14 +1,14 @@
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Col, Container, Row } from "react-bootstrap";
 
-function FormContainer({children}) {
+const FormContainer = ({ children }) => {
   return (
     <Container>
-        <Row className='justify-content-md-center'>
+      <Row className='justify-content-md-center'>
         <Col xs={12} md={6}>
-            {children}
+          {children}
         </Col>
-        </Row>
+      </Row>
     </Container>
   )
 }

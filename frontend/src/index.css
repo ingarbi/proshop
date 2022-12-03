@@ -1,5 +1,9 @@
-main {
+.main {
   min-height: 80vh;
+}
+
+h1, h2, h3, h4 {
+  text-transform: uppercase;
 }
 
 h1 {
@@ -7,7 +11,38 @@ h1 {
   padding: 1rem 0;
 }
 
-h1 {
+h2 {
   font-size: 1.4rem;
-  padding: 0.5 rem 0;
+  padding: 0.5rem 0;
+}
+
+.rating span {
+  margin: 0.1rem
+}
+
+/* caraousel */
+.carousel-item-prev,
+.carousel-item-next,
+.carousel-item.active {
+  display: flex;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 0;
+}
+
+.carousel-caption h2 {
+  color: #ffffff;
+}
+
+.carousel img {
+  height: 300px;
+  padding: 30px;
+  margin: 40px;
+  border-radius: 50%;
+}
+
+.carousel a {
+  margin: 0 auto;
 }
